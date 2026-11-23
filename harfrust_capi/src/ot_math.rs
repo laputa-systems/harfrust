@@ -238,10 +238,10 @@ pub unsafe extern "C" fn hr_ot_math_get_glyph_top_accent_attachment(
         .and_then(|math| math.math_glyph_info().ok())
         .and_then(|info| info.math_top_accent_attachment()?.ok())
         .and_then(|info| info.attachment_for_ppem(GlyphId::new(glyph), ppem(state, true)));
-    value.map_or_else(
-        || state.glyph_h_advance(font, glyph) / 2,
-        |value| position(state, value, true),
-    )
+    match value {
+        Some(value) => position(state, value, true),
+        None => state.glyph_h_advance(font, glyph) / 2,
+    }
 }
 
 /// Whether the glyph is covered by MATH's extended-shape set.
